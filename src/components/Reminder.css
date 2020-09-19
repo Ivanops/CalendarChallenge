@@ -1,0 +1,44 @@
+.Reminder {
+  padding: 16px;;
+}
+
+.Reminder .Title {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.Reminder .TitleText {
+  margin-left: 16px;
+}
+
+.Reminder .Input {
+  border: none;
+  outline: none;
+}
+
+.Reminder .Column {
+  display: flex;
+  flex-direction: column;
+}
+
+.Reminder .TimeInput {
+  width: 50px;
+  border: none;
+  outline: none;
+  text-align: right; 
+}
+
+.Reminder .ColorContainer {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+}
+
+.Reminder .Color {
+  width: 50px;
+  height: 50px;
+  margin-top: 5px;
+  margin-left: 5px;
+  border-radius: 10px;
+}

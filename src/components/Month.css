@@ -1,0 +1,22 @@
+.Month {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+}
+
+.Month .DayNameContent {
+  display: flex;
+  height: 60px;
+  flex-direction: row;
+  color: white;
+  background-color: rgb(46, 117, 182);
+  border-bottom: 1px solid rgba(0,0,0,0.2);
+}
+
+.Month .DayName {
+  flex:1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 2vw;
+}

@@ -1,0 +1,16 @@
+.Day {
+  overflow: hidden;
+  flex:1;
+  border-right: 1px solid rgba(0,0,0,0.2);
+  padding: 8px;
+  background-color: rgba(33, 33,33, 0.1);
+  color:  rgba(51, 51,51, 0.5);
+}
+
+.Day.WeekDay {
+  background-color: white;
+}
+
+.Day.BelongsToMonth {
+  color:  black;
+}
