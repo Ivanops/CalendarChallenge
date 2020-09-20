@@ -10,7 +10,18 @@
   height: 80px;
   color: white;
   background-color: rgb(46, 117, 182);
+  flex-direction: row;
+  justify-content: space-between;
   padding-left: 16px;
+  padding-right: 16px;
   align-items: center;
   border-bottom: 1px solid rgba(0,0,0,0.2);
+}
+
+.Calendar .Button {
+  background-color: transparent;
+  outline: none;
+  border:none;
+  cursor: pointer;
+  color:  rgba(255,255,255,0.5)
 }

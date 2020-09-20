@@ -17,7 +17,7 @@ const Month = ({date}: MonthProps) => {
     let dayCounter = 0;
     for (let i = 0; i < firstDay.getDay(); i++) {
       let isWeekDay = true;
-      const dayValue = new Date(date.getFullYear(), date.getMonth(), -(firstDay.getDay() - i));
+      const dayValue = new Date(date.getFullYear(), date.getMonth(), -(firstDay.getDay() - i - 1));
       if (dayCounter === 0 || dayCounter === 6) isWeekDay = false;
       days.push(<Day key={`Key${date.getFullYear()}${date.getMonth()}${dayValue.getDate()}`} isWeekDay={isWeekDay} belongsToMonth={false} day={dayValue.getDate().toString()} month={(date.getMonth() - 1).toString()} year={date.getFullYear().toString()} />);
       dayCounter++;

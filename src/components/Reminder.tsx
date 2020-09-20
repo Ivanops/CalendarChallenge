@@ -1,24 +1,30 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import "./Reminder.css";
 import { Modal, ModalBody, ModalHeader, ModalFooter, Button } from "reactstrap";
-import CalendarContext,  {Constants, ReminderModel, DayModel} from '../context/CalendarContext';
+import CalendarContext,  {Constants} from '../context/CalendarContext';
 import moment from "moment";
-import { report } from "process";
 
 const Reminder = () => {
 
-  const { reminderIndex,isNewReminder, reminder, isPopoverOpen, currentPopoverTarget, setPopoverState, setDayMap, dayMap, setReminder} = useContext(CalendarContext);
+  const { reminderIndex,isNewReminder, reminder, isPopoverOpen, currentPopoverTarget,  calendarManager, setCalendarManager, setPopoverState, setReminder} = useContext(CalendarContext);
 
   const toggle = () => setPopoverState(false);
 
+  const [weather, setWeather] = useState("");
+
+  const getDate = () => {
+    const targetSplitted = currentPopoverTarget.split("_");
+    const date = new Date(parseInt(targetSplitted[1]), parseInt(targetSplitted[2]), parseInt(targetSplitted[3]));
+    return date;
+  }
+
   const foramtDateId = () => {
-    const targetSplitted = currentPopoverTarget.split(".");
-    const date = new Date(parseInt(targetSplitted[1]), parseInt(targetSplitted[2]), parseInt(targetSplitted[3]))
-    return `${moment(date).format("MMM")} ${targetSplitted[3]},  ${moment().format("YYYY")}`;
+    const date = getDate();
+    return `${moment(date).format("MMM")} ${date.getDate()},  ${moment().format("YYYY")}`;
   }
 
   const handleInputChange = (event:any) => {
-    if (event.target.value.length < 30) {
+    if (event.target.value.length < Constants.textLimit) {
       reminder.name = event.target.value;
       setReminder({...reminder});
     }
@@ -39,23 +45,24 @@ const Reminder = () => {
       setReminder({...reminder});
     }
   }
-  const getWeather = async (city:string) => {
-    const fetchData:RequestInit = {
-      method: "GET",
-      mode: "cors",
-      headers: {
-        "API-Key": "904d7f07d2e556c3360fcfbd8415bf89"
-      }
-    }
-    const response = await fetch(`https://cors-anywhere.herokuapp.com/https://api.openweathermap.org/data/2.5/forecast/daily?q=${city}&cnt=1&appid=904d7f07d2e556c3360fcfbd8415bf89`, fetchData);
+  const getWeather = async () => {
+    const date = getDate();
+    console.log(date);
+    console.log(date.getTime()/1000);
+    const url = `https://api.openweathermap.org/data/2.5/forecast?q=${reminder.city}&cnt=1&date=${date.getTime()}&appid=904d7f07d2e556c3360fcfbd8415bf89`;
+    //const url = `https://cors-anywhere.herokuapp.com/http://samples.openweathermap.org/data/2.5/weather?q=${city}&appid=439d4b804bc8187953eb36d2a8c26a02`;
+    const response = await fetch(url);
     const json = await response.json();
-    console.log(json);
+    if (json.list && json.list[0] && json.list[0].weather && json.list[0].weather[0] && json.list[0].weather[0].description) {
+      setWeather(json.list[0].weather[0].description);
+    } else {
+      setWeather("Bad Input");
+    }
   }
 
   const onCityChange = (event:any) => {
-    if (event.target.value.length < 30) {
+    if (event.target.value.length < Constants.textLimit) {
       reminder.city = event.target.value;
-      getWeather(reminder.city);
       setReminder({...reminder});
     }
   }
@@ -74,17 +81,17 @@ const Reminder = () => {
   }
 
   const save = () => {
-    const dayModel = dayMap.get(currentPopoverTarget);
-    const newDayModel = dayModel || new DayModel();
-    if (isNewReminder) newDayModel.remindersList.push(reminder);
-    else newDayModel.remindersList[reminderIndex] = {...reminder};
-    newDayModel.remindersList.sort((a: ReminderModel, b: ReminderModel) => {
-      if (a.hour === b.hour) return a.minutes - b.minutes;
-      return a.hour - b.hour;
-    });
-    dayMap.set(currentPopoverTarget, newDayModel);
-    setDayMap(dayMap);
-    toggle();
+    if (isNewReminder) calendarManager.saveReminder(currentPopoverTarget, {...reminder});
+    else calendarManager.editReminder(currentPopoverTarget, {...reminder}, reminderIndex);
+    setCalendarManager(Object.assign({}, calendarManager));      
+    toggle();  
+  }
+
+  const handleDelete = () => {
+    if (isNewReminder) calendarManager.deleteAll(currentPopoverTarget);
+    else calendarManager.deleteOne(currentPopoverTarget, reminderIndex);
+    setCalendarManager(Object.assign({}, calendarManager));      
+    toggle();  
   }
  
   return (
@@ -95,12 +102,12 @@ const Reminder = () => {
       >
         <ModalHeader className="Column">
             <div className="Title">
-            <div className="Color" style={{backgroundColor:reminder.color}}></div>
-            <div className="TitleText">{foramtDateId()}</div>
+              <div className="Color" style={{backgroundColor:reminder.color}}></div>
+              <div className="TitleText">{foramtDateId()}</div>              
             </div>
             <input className="Input" onChange={handleInputChange} value={reminder.name} placeholder="Add New Reminder"></input>
         </ModalHeader>
-        <ModalBody>
+        <ModalBody className="Column">
           <div>
             <input className="TimeInput" onChange={onHoursChange} type="number" value={Constants.timeFormat(reminder.hour)}></input>:
             <input className="TimeInput" onChange={onMinutesChange} type="number" value={Constants.timeFormat(reminder.minutes)}></input>
@@ -111,8 +118,13 @@ const Reminder = () => {
           <div className="ColorContainer">
             {populateColors()}
           </div>
+          <div className="WeatherContainer">
+            <Button onClick={getWeather}>Get Weather By City and Date</Button>
+            <p className="WeatherResult">{weather}</p>
+          </div>
         </ModalBody>
         <ModalFooter>
+          {isNewReminder ? <Button onClick={handleDelete} color="danger">Delete ALL Reminders</Button> : <Button onClick={handleDelete} color="danger">Delete This Reminders</Button>}
           <Button onClick={toggle}>Cancel</Button>
           <Button onClick={save} style={{backgroundColor: "green"}}>Save Reminder</Button>
         </ModalFooter>

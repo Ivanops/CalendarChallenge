@@ -20,6 +20,11 @@
 .Reminder .Column {
   display: flex;
   flex-direction: column;
+  justify-content:space-around;
+}
+
+.Reminder .WeatherContainer {
+  margin-top: 16px;
 }
 
 .Reminder .TimeInput {
@@ -27,6 +32,10 @@
   border: none;
   outline: none;
   text-align: right; 
+}
+
+.Reminder .WeatherResult {
+  margin-top: 8px;
 }
 
 .Reminder .ColorContainer {

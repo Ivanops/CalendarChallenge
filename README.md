@@ -1,3 +1,14 @@
+
+# Challenge Business Docs
+- Add Reminder => double click on the day you want to add the reminder
+- Edit Reminder => double click on a reminder
+- Delete all reminders of a day => double click on the day you want to delete all reminders then press "Delete All Reminders"
+- Delete a reminder => double click on a reminder then press "Delete this Reminder"
+- Change Month => click on the previous month name or the next month name.
+
+
+### React Application Docs
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts

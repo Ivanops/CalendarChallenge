@@ -13,7 +13,7 @@ class DayProps {
 
 const Day = ({isWeekDay, belongsToMonth, year, month, day}: DayProps) => {
 
-  const {setIsNewReminder, setPopoverState, setCurrentTarget, dayMap, setReminder, setReminderIndex } = useContext(CalendarContext);
+  const {setIsNewReminder, setPopoverState, setCurrentTarget, calendarManager, setReminder, setReminderIndex } = useContext(CalendarContext);
 
   const checkClassByFlags = () => {
     let className = "Day";
@@ -23,15 +23,15 @@ const Day = ({isWeekDay, belongsToMonth, year, month, day}: DayProps) => {
   }
 
   const handleDoubleClick = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-    setCurrentTarget(`ID.${year}.${month}.${day}`);
+    setCurrentTarget(`ID_${year}_${month}_${day}`);
     setIsNewReminder(true);
     setReminder(new ReminderModel());
     setPopoverState(true);
   }
 
   const handleDoubleClickReminder = (i: number) => {
-    setCurrentTarget(`ID.${year}.${month}.${day}`);
-    const dayModel = dayMap.get(`ID.${year}.${month}.${day}`);
+    setCurrentTarget(`ID_${year}_${month}_${day}`);
+    const dayModel = calendarManager.dayData.get(`ID_${year}_${month}_${day}`);
     const newDayModel = dayModel || new DayModel();
     setReminderIndex(i);
     setIsNewReminder(false);
@@ -41,7 +41,7 @@ const Day = ({isWeekDay, belongsToMonth, year, month, day}: DayProps) => {
 
   const populateReminders = () => {
     const list: React.ReactNode[] = [];
-    const dayModel = dayMap.get(`ID.${year}.${month}.${day}`);
+    const dayModel = calendarManager.dayData.get(`ID_${year}_${month}_${day}`);
     const reminders = dayModel?.remindersList || [];
     
     for (let i = 0; i < reminders.length; i ++) {
@@ -54,8 +54,9 @@ const Day = ({isWeekDay, belongsToMonth, year, month, day}: DayProps) => {
   }
 
   return (
-    <div id={`ID.${year}.${month}.${day}`}  onDoubleClick={handleDoubleClick} className={ checkClassByFlags() }>
-      {day === "1" ? `${moment(new Date(parseInt(year), parseInt(month))).format("MMM")} ${day}` : day}
+    <div id={`ID_${year}_${month}_${day}`} onDoubleClick={handleDoubleClick} className={ checkClassByFlags() }>
+      <div className="Number">{day === "1" ? `${moment(new Date(parseInt(year), parseInt(month))).format("MMM")} ${day}` : day}</div>
+      
       {populateReminders()}
       
     </div>
