@@ -47,8 +47,6 @@ const Reminder = () => {
   }
   const getWeather = async () => {
     const date = getDate();
-    console.log(date);
-    console.log(date.getTime()/1000);
     const url = `https://api.openweathermap.org/data/2.5/forecast?q=${reminder.city}&cnt=1&date=${date.getTime()}&appid=904d7f07d2e556c3360fcfbd8415bf89`;
     //const url = `https://cors-anywhere.herokuapp.com/http://samples.openweathermap.org/data/2.5/weather?q=${city}&appid=439d4b804bc8187953eb36d2a8c26a02`;
     const response = await fetch(url);
