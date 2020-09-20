@@ -19,11 +19,10 @@ const Month = ({date}: MonthProps) => {
       let isWeekDay = true;
       const dayValue = new Date(date.getFullYear(), date.getMonth(), -(firstDay.getDay() - i));
       if (dayCounter === 0 || dayCounter === 6) isWeekDay = false;
-      days.push(<Day key={`Key${date.getFullYear()}${date.getMonth()}${dayValue.getDate()}`} isWeekDay={isWeekDay} belongsToMonth={false} day={dayValue.getDate().toString()} month={date.getMonth().toString()} year={date.getFullYear().toString()} />);
+      days.push(<Day key={`Key${date.getFullYear()}${date.getMonth()}${dayValue.getDate()}`} isWeekDay={isWeekDay} belongsToMonth={false} day={dayValue.getDate().toString()} month={(date.getMonth() - 1).toString()} year={date.getFullYear().toString()} />);
       dayCounter++;
     }
 
-    console.log(lastDay.getDate());
     for (let i = 1; i <= lastDay.getDate(); i++) {
       if (dayCounter === 7) {
         dayCounter = 0;
@@ -42,7 +41,7 @@ const Month = ({date}: MonthProps) => {
         }
         let isWeekDay = true;
         if (dayCounter === 0 || dayCounter === 6) isWeekDay = false;
-        days.push(<Day key={`Key${date.getFullYear()}${date.getMonth() + 1}${extraDaysCounter}`} isWeekDay={isWeekDay} belongsToMonth={false} day={extraDaysCounter.toString()} month={date.getMonth().toString()} year={date.getFullYear().toString()} />);
+        days.push(<Day key={`Key${date.getFullYear()}${date.getMonth() + 1}${extraDaysCounter}`} isWeekDay={isWeekDay} belongsToMonth={false} day={extraDaysCounter.toString()} month={(date.getMonth() + 1).toString()} year={date.getFullYear().toString()} />);
         dayCounter++;
         extraDaysCounter++;
       }
